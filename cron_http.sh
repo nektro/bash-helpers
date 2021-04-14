@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Usage: ./cron_http.sh <url> <wait in hrs>
+# Usage: ./cron_http.sh <url> <wait in hrs> <bool>
 # Calls ./generate.sh after finding new updates to <url>
 
 most_recent=''
@@ -27,4 +27,9 @@ do
 
     echo "found new $etag"
     ./generate.sh
+
+    if [ "$3" == "true" ]
+    then
+        $(dirname $(realpath $0))/commit.sh
+    fi
 done

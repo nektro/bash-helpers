@@ -2,7 +2,7 @@
 
 set -e
 
-# Usage: ./cron_commits.sh <owner/repo> <wait in hrs>
+# Usage: ./cron_commits.sh <owner/repo> <wait in hrs> <bool>
 # Calls ./generate.sh after finding new commits to <owner/repo>
 
 most_recent=''
@@ -29,4 +29,9 @@ do
 
     echo "found new commit $sha"
     ./generate.sh
+
+    if [ "$3" == "true" ]
+    then
+        $(dirname $(realpath $0))/commit.sh
+    fi
 done
