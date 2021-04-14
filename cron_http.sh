@@ -7,27 +7,27 @@ touch $2
 
 most_recent=$(cat $2)
 
-    headers=$(curl -s -X HEAD -v $1 2>&1)
-    etag=$(echo "$headers" | grep 'etag')
+headers=$(curl -s -X HEAD -v $1 2>&1)
+etag=$(echo "$headers" | grep 'etag')
 
-    if [ -z "$most_recent" ]
-    then
-        printf "$etag" > $2
-        most_recent="$etag"
-        echo "first run of loop, $etag"
-        exit
-    fi
+if [ -z "$most_recent" ]
+then
+    printf "$etag" > $2
+    most_recent="$etag"
+    echo "first run of loop, $etag"
+    exit
+fi
 
-    if [ "$most_recent" == "$etag" ]
-    then
-        echo "most recent etag is the same, sleeping"
-        exit
-    fi
+if [ "$most_recent" == "$etag" ]
+then
+    echo "most recent etag is the same, sleeping"
+    exit
+fi
 
-    echo "found new $etag"
-    ./generate.sh
+echo "found new $etag"
+./generate.sh
 
-    if [ "$3" == "true" ]
-    then
-        $(dirname $(realpath $0))/commit.sh
-    fi
+if [ "$3" == "true" ]
+then
+    $(dirname $(realpath $0))/commit.sh
+fi
