@@ -1,28 +1,27 @@
 #!/usr/bin/env bash
 
-# Usage: ./cron_http.sh <url> <wait in hrs> <bool>
+# Usage: ./cron_http.sh <url> <cache_file> <bool>
 # Calls ./generate.sh after finding new updates to <url>
 
-most_recent=''
+touch $2
 
-while true
-do
+most_recent=$(cat $2)
+
     headers=$(curl -s -X HEAD -v $1 2>&1)
     etag=$(echo "$headers" | grep 'etag')
 
     if [ -z "$most_recent" ]
     then
+        printf "$etag" > $2
         most_recent="$etag"
         echo "first run of loop, $etag"
-        continue
+        exit
     fi
 
     if [ "$most_recent" == "$etag" ]
     then
         echo "most recent etag is the same, sleeping"
-        # sec - min - hr
-        sleep $((1 * 60 * 60 * $2))
-        continue
+        exit
     fi
 
     echo "found new $etag"
@@ -32,4 +31,3 @@ do
     then
         $(dirname $(realpath $0))/commit.sh
     fi
-done
