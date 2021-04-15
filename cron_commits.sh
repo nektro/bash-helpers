@@ -29,7 +29,9 @@ fi
 echo "found new commit $sha"
 ./generate.sh
 
-if [ "$3" == "true" ]
+if [ -z "$3" ]
 then
-    $(dirname $(realpath $0))/commit.sh
+    exit
 fi
+
+$(dirname $(realpath $0))/commit.sh
