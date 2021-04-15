@@ -32,4 +32,9 @@ then
     exit
 fi
 
+if [ $(git diff | wc -l) == "0" ]
+then
+    exit
+fi
+
 $(dirname $(realpath $0))/commit.sh
